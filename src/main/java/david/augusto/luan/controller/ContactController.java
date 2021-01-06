@@ -3,6 +3,7 @@ package david.augusto.luan.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +41,7 @@ public class ContactController {
 		List<Contact> list = contactRepository.findAll();
 		list.forEach(i -> {
 			if (i.getEmail().equals(contact.getEmail())) {
-				throw new EmailAlreadyRegistered("Email já cadastrado!");
+				throw new EmailAlreadyRegistered(HttpStatus.BAD_REQUEST, "Email já cadastrado!");
 			}
 		});
 		return contactRepository.save(contact);
@@ -53,6 +54,6 @@ public class ContactController {
 			record.setEmail(contact.getEmail());
 			record.setPassword(contact.getPassword());
 			return ResponseEntity.ok().body(record);
-		}).orElseThrow(() -> new UserDoesNotExist("Usuario não encontrado!"));
+		}).orElseThrow(() -> new UserDoesNotExist(HttpStatus.BAD_REQUEST, "Usuario não encontrado!"));
 	}
 }
